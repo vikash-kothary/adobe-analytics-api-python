@@ -3452,6 +3452,8 @@ class Analytics:
         """
         if rsid is None:
             raise ValueError("Require a reportSuite ID")
+        if self.loggingEnabled:
+            self.logger.debug(f"starting getClassificationDatasets")
         path = f"/classifications/datasets/compatibilityMetrics/{rsid}"
         res = self.connector.getData(self.endpoint_company + path)
         return res
@@ -3464,6 +3466,8 @@ class Analytics:
         """
         if datasetId is None:
             raise ValueError("DataSet ID")
+        if self.loggingEnabled:
+            self.logger.debug(f"starting getClassificationDataset")
         path = f"/classifications/datasets/{datasetId}"
         res = self.connector.getData(self.endpoint_company + path)
         return res
@@ -3476,6 +3480,8 @@ class Analytics:
         """
         if datasetId is None:
             raise ValueError("datasetId is required")
+        if self.loggingEnabled:
+            self.logger.debug(f"starting getClassificationTemplate")
         path = f"/classifications/datasets/template/{datasetId}"
         res = self.connector.getData(self.endpoint_company + path)
         return res
@@ -3489,6 +3495,8 @@ class Analytics:
         """
         if datasetId is None:
             raise ValueError("A datasetId is required")
+        if self.loggingEnabled:
+            self.logger.debug(f"starting getClassificationJobs")
         path = f"/classifications/job/byDataset/{datasetId}"
         params = {"page": 0, "size": 10}
         res = self.connector.getData(self.endpoint_company + path, params=params)
@@ -3512,6 +3520,8 @@ class Analytics:
         """
         if jobId is None:
             raise ValueError('Required a Job ID')
+        if self.loggingEnabled:
+            self.logger.debug(f"starting getClassificationJob")
         path = f"/classifications/job/{jobId}"
         res = self.connector.getData(self.endpoint_company + path)
         return res
@@ -3524,23 +3534,32 @@ class Analytics:
         """
         if datasetId is None:
             raise ValueError("Require a Dataset Id")
+        if self.loggingEnabled:
+            self.logger.debug(f"starting deleteClassification for datasetId {datasetId}")
         path = f"/classifications/datasets/{datasetId}"
         res = self.connector.deleteData(self.endpoint_company + path)
         return res
 
-    def createImportClassificationJob(self,datasetId:str=None,dataFormat:str='json',jobName:str='aanalytics2',delimiter:str=",",encoding:str="UTF8")->dict:
+    def createImportClassificationJob(self,datasetId:str=None,import_def:dict=None,data:list=None,dataFormat:str='json',jobName:str='aanalytics2',delimiter:str=",",encoding:str="UTF8")->dict:
         """
         Create API import job entity on classification dataset, need to upload file after this API call
         Arguments:
             datasetId : REQUIRED : The datasetId to be used
+            import_def : OPTIONAL : The full definition to be used for the job.
             dataFormat : OPTIONAL : If you want to specify another type of file to import (default "json",possible "tab" or "tsv")
             jobName : OPTIONAL : Job Name to be given
             delimiter : OPTIONAL : The delimiter of lists
             encoding : OPTIONAL : Encoding to be used (default UTF8)
+            data : OPTIONAL : The data to be used for the import when using the different parameters (other than import_def)
         """
         if datasetId is None:
             raise ValueError("Require a datasetId")
         path = f"/classifications/job/import/createApiJob/{datasetId}"
+        if self.loggingEnabled:
+            self.logger.debug(f"starting createImportClassificationJob for datasetId {datasetId}")
+        if import_def is not None and type(import_def) == dict:
+            res = self.connector.postData(self.endpoint_company+path,data=import_def)
+            return res
         data = {
             "dataFormat": dataFormat,
             "encoding": encoding,
@@ -3551,7 +3570,8 @@ class Analytics:
                 "byte_length": 0,
                 "type": "string",
                 "overwrite": True
-            }
+            },
+            data : data
             }
         res = self.connector.postData(self.endpoint_company+path,data=data)
         return res
