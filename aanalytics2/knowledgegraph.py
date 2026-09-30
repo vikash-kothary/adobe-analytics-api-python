@@ -90,6 +90,7 @@ class KnowledgeGraph:
         for rsid in self.rsids:
             self.namespaces[f"{rsid}/dimensions"] = Namespace(f"http://analytics.com/{self.companyId}/{rsid}/dimension#")
             self.namespaces[f"{rsid}/metrics"] = Namespace(f"http://analytics.com/{self.companyId}/{rsid}/metric#")
+        self.project_details = []
 
     @staticmethod
     def _normalize_dimension_id(dimension_id: str) -> str:
@@ -110,7 +111,6 @@ class KnowledgeGraph:
                 - 'random' : Load a random sample of projects.
                 - 'users' : Load projects based on the user(s) who own them (requires a list of user email addresses)
         """
-        self.project_details = []
         def get_project_details(project):
                     project_id = project.get('id')
                     project_details = self.analyticsAPI.getProject(projectId=project_id)

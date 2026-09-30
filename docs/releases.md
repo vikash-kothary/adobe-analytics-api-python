@@ -11,7 +11,9 @@ The changes have been tracked starting version 0.1.0
   * createProjectFromReport
   * createProjectFromRequest
   * createProjectFromDataFrame
-* Adding the `getTargetReport` method to be able to build confidence and significance report with calculated metrics from the API. [Documentation](./main.md#getTargetReport)
+* Adding the `getTargetReport` method to be able to build confidence and significance report with calculated metrics from the API. [Documentation](./main.md#getTargetReport)\
+Patch: 
+* Fix the issue with project details not being properly loaded in the knowledge graph.
 
 
 ## version 0.5.3 
